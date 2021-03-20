@@ -7,6 +7,9 @@
  * @subpackage UnitTests
  * @license    http://www.horde.org/licenses/bsd
  */
+namespace Horde\Support;
+use PHPUnit\Framework\TestCase;
+use \Horde_Support_Memory;
 
 /**
  * @category   Horde
@@ -14,19 +17,19 @@
  * @subpackage UnitTests
  * @license    http://www.horde.org/licenses/bsd
  */
-class Horde_Support_MemoryTest extends PHPUnit_Framework_TestCase
+class MemoryTest extends TestCase
 {
     public function testMemoryStart()
     {
         $t = new Horde_Support_Memory;
-        $this->assertInternalType('array', $t->push());
+        $this->assertIsArray($t->push());
     }
 
     public function testMemoryEnd()
     {
         $t = new Horde_Support_Memory;
         $t->push();
-        $this->assertInternalType('array', $t->pop());
+        $this->assertIsArray($t->pop());
     }
 
     public function testStartValues()
@@ -53,11 +56,9 @@ class Horde_Support_MemoryTest extends PHPUnit_Framework_TestCase
 
     public function testNotPushedThrowsException()
     {
+        $this->expectException('Exception');
         $t = new Horde_Support_Memory();
-        try {
-            $t->pop();
-            $this->fail('Expected Exception');
-        } catch (Exception $e) {}
+        $t->pop();
     }
 
 }

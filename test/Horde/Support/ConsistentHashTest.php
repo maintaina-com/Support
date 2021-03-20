@@ -7,6 +7,9 @@
  * @subpackage UnitTests
  * @license    http://www.horde.org/licenses/bsd
  */
+namespace Horde\Support;
+use PHPUnit\Framework\TestCase;
+use \Horde_Support_ConsistentHash;
 
 /**
  * @category   Horde
@@ -14,7 +17,7 @@
  * @subpackage UnitTests
  * @license    http://www.horde.org/licenses/bsd
  */
-class Horde_Support_ConsistentHashTest extends PHPUnit_Framework_TestCase
+class ConsistentHashTest extends TestCase
 {
     public function testAddUpdatesCount()
     {
@@ -71,7 +74,7 @@ class Horde_Support_ConsistentHashTest extends PHPUnit_Framework_TestCase
     public function testRemoveThrowsOnNonexistentNode()
     {
         $h = new Horde_Support_ConsistentHash;
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $h->remove('a');
     }
 
@@ -152,19 +155,17 @@ class Horde_Support_ConsistentHashTest extends PHPUnit_Framework_TestCase
         $h = new Horde_Support_ConsistentHash(range(1, 10));
         $nodes = $h->getNodes('r', 2);
 
-        $this->assertInternalType('array', $nodes);
+        $this->assertIsArray($nodes);
         $this->assertEquals(count($nodes), 2);
         $this->assertNotEquals($nodes[0], $nodes[1]);
     }
 
     public function testGetNodesWithNotEnoughNodes()
     {
+        $this->expectException('Exception');
+        
         $h = new Horde_Support_ConsistentHash(array('t'));
-
-        try {
-            $h->getNodes('resource', 2);
-            $this->fail('Expected Exception');
-        } catch (Exception $e) {}
+        $h->getNodes('resource', 2);
     }
 
     public function testGetNodesWrapsToBeginningOfCircle()
